@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web App</title>
+</head>
+<body>
+    <h1>Welcome to the Web App</h1>
+    
+    <form id="dataForm">
+        <label for="userData">Enter Data:</label>
+        <input type="text" id="userData" name="userData">
+        <button type="submit">Submit</button>
+    </form>
+    
+    <h2>Stored Data:</h2>
+    <button id="retrieveData">Retrieve Data</button>
+    <div id="storedData"></div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const userData = document.getElementById('userData').value;
+            const response = await fetch('/api/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data: userData })
+            });
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        document.getElementById('retrieveData').addEventListener('click', async function() {
+            const response = await fetch('/api/retrieve');
+            const data = await response.json();
+            document.getElementById('storedData').innerHTML = JSON.stringify(data);
+        });
+    </script>
+</body>
+</html>
